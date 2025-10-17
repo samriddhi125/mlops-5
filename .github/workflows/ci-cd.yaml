@@ -4,7 +4,7 @@ name: CD - Train and Deploy Fatality Predictor
 on:
   push:
     branches:
-      - main # Or your deployment branch
+      - main
 
 jobs:
   train-and-deploy:
@@ -20,19 +20,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Change to your S3 bucket's region
 
-      - name: Set up Python and DVC
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - run: |
+      - name: Install Dependencies
+        run: |
           pip install -r requirements.txt
+          pip install dvc[s3] # Explicitly install DVC with S3 support
       
       - name: Pull DVC Data
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: dvc pull -r origin
+        run: dvc pull
 
       - name: Run DVC Pipeline
         run: dvc repro
@@ -41,7 +43,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: dvc push -r origin
+        run: dvc push
 
       - name: Commit DVC changes
         run: |
@@ -60,9 +62,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }} # e.g., 'ubuntu' or 'ec2-user'
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd israel-palestine-ml-app
+            cd mlops-5
             git pull
             docker compose up --build -d
