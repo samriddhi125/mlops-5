@@ -1,7 +1,5 @@
-fastapi
-uvicorn[standard]
-scikit-learn
-pandas
-PyYAML
-dvc[s3] # Add s3 extra for DVC remote storage
-python-multipart # For FastAPI forms
+streamlit==1.30.0
+pandas==2.1.1
+plotly==5.15.0
+statsmodels==0.14.0
+PyYAML==6.0.1

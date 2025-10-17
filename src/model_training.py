@@ -1,48 +1,30 @@
 # src/model_training.py
-import yaml
 import pandas as pd
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 import pickle
-import json
-from sklearn.linear_model import LogisticRegression
 from pathlib import Path
-import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+def train_forecasting_model():
+    data_path = Path("data/processed/monthly_fatalities_timeseries.csv")
+    model_dir = Path("models")
+    model_dir.mkdir(exist_ok=True)
 
-def train_model(params_path):
-    logging.info("Starting model training...")
-    with open(params_path) as f:
-        params = yaml.safe_load(f)
-
-    train_params = params['model_training']
-    target_col = params['data_processing']['target_column']
+    df = pd.read_csv(data_path, index_col='date', parse_dates=True)
     
-    processed_data_path = Path("data/processed/train.csv")
-    models_dir = Path("models")
-    models_dir.mkdir(exist_ok=True)
+    # A simple SARIMA model configuration (p,d,q)(P,D,Q,s)
+    # These parameters can be tuned for better performance
+    order = (1, 1, 1)
+    seasonal_order = (1, 1, 1, 12) # 12 for monthly seasonality
 
-    logging.info(f"Loading training data from {processed_data_path}")
-    train_df = pd.read_csv(processed_data_path)
+    print("Training SARIMA model...")
+    model = SARIMAX(df['fatalities'], order=order, seasonal_order=seasonal_order)
+    results = model.fit(disp=False)
 
-    X_train = train_df.drop(target_col, axis=1)
-    y_train = train_df[target_col]
+    # Save the trained model
+    with open(model_dir / "forecasting_model.pkl", "wb") as f:
+        pickle.dump(results, f)
 
-    model = LogisticRegression(
-        random_state=train_params['random_state'],
-        max_iter=train_params['max_iter']
-    )
-    
-    logging.info("Fitting the model...")
-    model.fit(X_train, y_train)
-
-    # Save model and columns
-    with open(models_dir / "model.pkl", "wb") as f:
-        pickle.dump(model, f)
-    
-    with open(models_dir / "model_columns.json", "w") as f:
-        json.dump({"columns": X_train.columns.tolist()}, f)
-
-    logging.info(f"Model and columns saved to {models_dir}")
+    print(f"Forecasting model trained and saved to {model_dir}")
 
 if __name__ == "__main__":
-    train_model("params.yaml")
+    train_forecasting_model()

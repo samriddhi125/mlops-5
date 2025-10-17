@@ -1,23 +1,17 @@
 # dvc.yaml
 stages:
   process:
-    cmd: python src/data_processing.py --config params.yaml
+    cmd: python src/data_processing.py
     deps:
-      - data/raw/fatalities_isr_pse_conflict_2000_to_2023.csv
       - src/data_processing.py
-    params:
-      - data_processing
+      - data/raw/fatalities_isr_pse_conflict_2000_to_2023.csv
     outs:
-      - data/processed
+      - data/processed/monthly_fatalities_timeseries.csv
 
   train:
-    cmd: python src/model_training.py --params params.yaml
+    cmd: python src/model_training.py
     deps:
-      - data/processed
       - src/model_training.py
-    params:
-      - model_training
-      - data_processing.target_column
+      - data/processed/monthly_fatalities_timeseries.csv
     outs:
-      - models/model.pkl
-      - models/model_columns.json
+      - models/forecasting_model.pkl
