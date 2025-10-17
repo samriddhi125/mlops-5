@@ -4,14 +4,14 @@ This project uses machine learning to create a time-series forecast that project
 
 The primary goal is not to predict the future with certainty, but to provide a stark, data-driven visualization of the long-term consequences of the genocide. The dashboard serves as an analytical tool to foster a deeper understanding of the scale of loss and the urgent need for a peaceful resolution.
 
-### ## Model & Visualization
+### Model & Visualization
 
 * **Model**: A SARIMA (Seasonal AutoRegressive Integrated Moving Average) time-series model is trained on monthly fatality counts to learn the underlying trends, seasonality, and patterns in the historical data.
 * **Dashboard**: The core of the project is an interactive dashboard built with Streamlit. It displays:
     * A solid line representing the **actual number of Palestinian fatalities** recorded each month since 2000.
     * A dotted line representing the **model's forecast** for the next several years, showing the projected continuation of this tragic trend.
 
-### ## **Ethical Considerations & Model Limitations**
+### **Ethical Considerations & Model Limitations**
 
 It is crucial to understand that this is a **mathematical projection, not a prophecy**. This model **cannot predict**:
 * New peace treaties or successful de-escalations.
@@ -20,13 +20,13 @@ It is crucial to understand that this is a **mathematical projection, not a prop
 
 The forecast's value is in its ability to answer the question: "What might the human loss look like if nothing changes?"
 
-### ## Technology Stack 
+### Technology Stack 
 
 * **Forecasting Model**: `statsmodels` (for SARIMA), Pandas
 * **Web Dashboard**: Streamlit, Plotly Express
 * **Deployment**: Docker, GitHub Actions, AWS EC2
 
-### ## Local Setup
+### Local Setup
 
 1.  **Clone the Repository**:
     ```bash
