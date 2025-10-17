@@ -1,0 +1,16 @@
+# params.yaml
+data_processing:
+  test_size: 0.2
+  random_state: 42
+  target_column: "citizenship"
+  features_to_drop:
+    - "name"
+    - "date_of_event"
+    - "date_of_death"
+    - "event_location_region" # Too many categories, simplifying
+    - "notes"
+
+model_training:
+  random_state: 42
+  max_iter: 1000 # Increased for convergence
+  test_size: 0.2

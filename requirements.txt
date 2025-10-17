@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+scikit-learn
+pandas
+PyYAML
+dvc[s3] # Add s3 extra for DVC remote storage
+python-multipart # For FastAPI forms

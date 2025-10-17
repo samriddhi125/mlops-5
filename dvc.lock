@@ -1,0 +1,59 @@
+schema: '2.0'
+stages:
+  process:
+    cmd: python src/data_processing.py --config params.yaml
+    deps:
+    - path: data/raw/fatalities_isr_pse_conflict_2000_to_2023.csv
+      hash: md5
+      md5: e8c86804e5416959e40dfef8f86376b5
+      size: 3105520
+    - path: src/data_processing.py
+      hash: md5
+      md5: 4b775c080317d5babc5ba62e7b81181e
+      size: 1648
+    params:
+      params.yaml:
+        data_processing:
+          test_size: 0.2
+          random_state: 42
+          target_column: citizenship
+          features_to_drop:
+          - name
+          - date_of_event
+          - date_of_death
+          - event_location_region
+          - notes
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: f0052d2ae215971836d59a9c4331a4b5.dir
+      size: 76016570
+      nfiles: 2
+  train:
+    cmd: python src/model_training.py --params params.yaml
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: f0052d2ae215971836d59a9c4331a4b5.dir
+      size: 76016570
+      nfiles: 2
+    - path: src/model_training.py
+      hash: md5
+      md5: 832c633f55af052d519a59a3cc11154b
+      size: 1420
+    params:
+      params.yaml:
+        data_processing.target_column: citizenship
+        model_training:
+          random_state: 42
+          max_iter: 1000
+          test_size: 0.2
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: c2356270dae3d5962168c0e904742607
+      size: 63260
+    - path: models/model_columns.json
+      hash: md5
+      md5: b06ea04b802b1826c8646f2f1939af3a
+      size: 35979
