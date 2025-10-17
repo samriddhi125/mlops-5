@@ -1,0 +1,12 @@
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# DVC cache (if you use it)
+.dvc/cache
+
+# Data files (if large and managed by DVC)
+data/
