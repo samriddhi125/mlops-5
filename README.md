@@ -30,7 +30,7 @@ The forecast's value is in its ability to answer the question: "What might the h
 
 1.  **Clone the Repository**:
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    git clone https://github.com/samriddhi125/mlops-5.git
     cd your-repo-name
     ```
 
